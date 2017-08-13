@@ -30,4 +30,4 @@ def read_arduino_serial(port, baud):
     
     return row_dict
     
-print(read_arduino_serial(ARDUINO_PORT, BAUD))
+print(read_arduino_serial(ARDUINO_PORT, BAUD))  
