@@ -9,9 +9,6 @@ import serial
 import datetime
 import json
 
-ARDUINO_PORT = "COM3"
-BAUD = 9600
-
 def read_arduino_serial(port, baud):
     """
     Opens a connection to arduino serial port
@@ -30,4 +27,4 @@ def read_arduino_serial(port, baud):
     
     return row_dict
     
-print(read_arduino_serial(ARDUINO_PORT, BAUD))  
+read_arduino_serial('COM3', 9600)

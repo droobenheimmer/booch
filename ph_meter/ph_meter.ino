@@ -10,7 +10,7 @@
 #define Offset 0.00 //deviation compensate
 #define LED 13
 #define samplingInterval 20
-#define printInterval 800
+#define printInterval 1000 * 30
 #define ArrayLenth 40 //times of collection
 
 int pHArray[ArrayLenth]; //Store the average value of the sensor feedback
