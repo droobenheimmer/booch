@@ -3,7 +3,7 @@
 #include <DallasTemperature.h>
 
 // Data wire is plugged into pin 8 on the Arduino
-#define ONE_WIRE_BUS 8
+#define ONE_WIRE_BUS 2
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
 OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature. 
@@ -16,7 +16,7 @@ void setup(void)
   sensors.begin();
 }
 
-void loop(void)
+void loop(void) 
 { 
   // Send the command to get temperatures
   sensors.requestTemperatures();  

@@ -84,17 +84,3 @@ def write_row(spreadsheet_id, value_list, rangeName):
     response = request.execute()
     
     pprint(response)
-    
-    
-#    result = service.spreadsheets().values().get(
-#        spreadsheetId=spreadsheetId, range=rangeName).execute()
-#    values = result.get('values', [])
-
-    
-#    if not values:
-#        print('No data found.')
-#    else:
-#        for row in values:
-#            # Print columns A and E, which correspond to indices 0 and 4.
-#            print('%s, %s' % (row[0], row[4]))
-
