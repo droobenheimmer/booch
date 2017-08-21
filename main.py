@@ -13,7 +13,7 @@ import time
 COLUMNS = ["batch_id", "timestamp", "voltage", "pH", "temperature"]
 SPREADSHEET_ID = '1v5JI1Om51v-5gItMuMiNNnmWW8YCQyY8TYk41zsRz8o'
 RANGE = 'Automated_Readings!A2:E'
-ARDUINO_PORT = "COM3"
+ARDUINO_PORT = "COM4"
 BAUD = 9600
 WRITE_INTERVAL = 120
 
@@ -31,8 +31,8 @@ def main(batch_id):
         
         row_dict = read_arduino_serial(ARDUINO_PORT, BAUD)
         row = [batch_id, row_dict['timestamp'], row_dict['voltage'], row_dict['pH'], '']
-        write_row(SPREADSHEET_ID, ['asdfdl', 'sdfsdk'], RANGE)
-        
+        write_row(SPREADSHEET_ID, row, RANGE)
+        print ("Written Successfully", row)
         time.sleep(WRITE_INTERVAL)
     
 if __name__ == "__main__":
