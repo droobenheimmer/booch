@@ -57,12 +57,7 @@ def get_credentials():
     return credentials
 
 def write_row(spreadsheet_id, value_list, rangeName):
-    """Shows basic usage of the Sheets API.
 
-    Creates a Sheets API service object and prints the names and majors of
-    students in a sample spreadsheet:
-    https://docs.google.com/spreadsheets/d/1v5JI1Om51v-5gItMuMiNNnmWW8YCQyY8TYk41zsRz8o/edit
-    """
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
     discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
