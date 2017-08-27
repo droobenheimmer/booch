@@ -24,7 +24,8 @@ def read_arduino_serial(port, baud):
     row_string = arduino.readline()[0:-2].decode('utf-8').replace("'", "\"")
     
     if len(row_string) < 7:
-        time.sleep(10)
+        print ("\nArduino Serial passed string under 7 characters, waiting 20 sec for next line\n")
+        time.sleep(20)
         row_string = arduino.readline()[0:-2].decode('utf-8').replace("'", "\"")
         
     row_dict = json.loads(row_string)

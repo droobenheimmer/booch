@@ -9,10 +9,14 @@ import time
 import os
 import subprocess
 import argparse
+import cgitb
+import traceback
 
 from googleapiclient import errors
 from google_sheets_api import write_row
 from serial_read import read_arduino_serial
+
+cgitb.enable(format='text')
 
 # Parse batch number
 #parser = argparse.ArgumentParser(description='Retrieve arguments')
@@ -22,7 +26,7 @@ from serial_read import read_arduino_serial
 # Establish program constants
 COLUMNS = ["batch_id", "timestamp", "voltage", "pH", "temperature"]
 
-BATCH_ID = 2
+BATCH_ID = 3
 PORT_NAME = os.environ.get("PORT_NAME")
 ARDUINO_EXE = os.environ.get("ARDUINO_EXE")
 SPREADSHEET_ID = os.environ.get("GOOGLE_SPREADSHEET_ID")
@@ -39,16 +43,15 @@ def main(batch_id):
 
     In infinite loop, continuously reads serial output from Arduino and writes to google sheets
     """
-    try:        
-        
-        upload_arduino_script(ARDUINO_EXE, PORT_NAME, PROJECT_FILE)
-    
-    except Exception:
-        
-        print("Failed to upload Arduino code")
-        return 0
-    
+           
+    pH_meter_process = upload_arduino_script(ARDUINO_EXE, PORT_NAME, PROJECT_FILE)
+
     while True:
+
+        # poll process to ensure that it's still running, if not None, reupload arduino script
+        if pH_meter_process.poll():
+            pH_meter_process = upload_arduino_script(ARDUINO_EXE, PORT_NAME, PROJECT_FILE)
+	
         try:
             
             row_dict = read_arduino_serial(PORT_NAME, BAUD)
@@ -68,7 +71,7 @@ def main(batch_id):
         except Exception:
             
             print("Uncaught Exception \n")
-            print(Exception.with_traceback)
+            traceback.print_exc()
             time.sleep(WRITE_INTERVAL)
             
 def upload_arduino_script(arduino_exe, port, project_file):
@@ -80,17 +83,16 @@ def upload_arduino_script(arduino_exe, port, project_file):
     
     arduino_command =  arduino_exe  + " --upload " + "--port " + port + " " + project_file
                        
-    print ("\n\n -- Arduino Command --")
+    print ("\n\n-- Arduino Command --")
     print (arduino_command)
     
     print ("-- Starting Upload --\n")
     
-    presult = subprocess.call(arduino_command, shell=True)
+    p = subprocess.Popen(arduino_command, shell=True, stdin=None, stdout=None, stderr=None)
+
+    time.sleep(5)
     
-    if presult != 0:
-        print ("\n Failed - result code = {}".format(presult))
-    else:
-        print ("\n-- Success --")
+    return p
         
 if __name__ == "__main__":
     
