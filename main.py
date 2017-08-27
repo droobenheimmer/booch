@@ -58,7 +58,7 @@ def main(batch_id):
         try:
             
             row_dict = read_arduino_serial(PORT_NAME, BAUD)
-            row = [batch_id, row_dict['timestamp'], row_dict['voltage'], row_dict['pH'], '']
+            row = [batch_id, row_dict['timestamp'], row_dict['voltage'], row_dict['pH'], row_dict['temp_f']]
             write_row(SPREADSHEET_ID, row, RANGE)
             logger.info("Written Successfully: " + str(row))
             time.sleep(WRITE_INTERVAL)
