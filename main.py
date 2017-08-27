@@ -10,18 +10,21 @@ import os
 import subprocess
 import argparse
 import cgitb
-import traceback
+import logging
 
 from googleapiclient import errors
 from google_sheets_api import write_row
 from serial_read import read_arduino_serial
 
+logging.basicConfig(filename='pH_readings.log',level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 cgitb.enable(format='text')
 
 # Parse batch number
-#parser = argparse.ArgumentParser(description='Retrieve arguments')
-#parser.add_argument('--batch', nargs='?', const=1, type=int)
-#args = parser.parse_args()
+parser = argparse.ArgumentParser(description='Retrieve arguments')
+parser.add_argument('--batch', nargs='?', const=1, type=int)
+args = parser.parse_args()
 
 # Establish program constants
 COLUMNS = ["batch_id", "timestamp", "voltage", "pH", "temperature"]
@@ -57,7 +60,7 @@ def main(batch_id):
             row_dict = read_arduino_serial(PORT_NAME, BAUD)
             row = [batch_id, row_dict['timestamp'], row_dict['voltage'], row_dict['pH'], '']
             write_row(SPREADSHEET_ID, row, RANGE)
-            print ("Written Successfully", row)
+            logger.info("Written Successfully: " + str(row))
             time.sleep(WRITE_INTERVAL)
         
         except errors.HttpError as error:
@@ -68,10 +71,8 @@ def main(batch_id):
              
             else: raise
     
-        except Exception:
-            
-            print("Uncaught Exception \n")
-            traceback.print_exc()
+        except Exception as e:
+            logger.exception("Uncaught Exception")
             time.sleep(WRITE_INTERVAL)
             
 def upload_arduino_script(arduino_exe, port, project_file):
