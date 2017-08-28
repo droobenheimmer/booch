@@ -29,14 +29,14 @@ args = parser.parse_args()
 # Establish program constants
 COLUMNS = ["batch_id", "timestamp", "voltage", "pH", "temperature"]
 
-BATCH_ID = 3
+BATCH_ID = args.batch
 PORT_NAME = os.environ.get("PORT_NAME")
 ARDUINO_EXE = os.environ.get("ARDUINO_EXE")
 SPREADSHEET_ID = os.environ.get("GOOGLE_SPREADSHEET_ID")
 PROJECT_FILE = "./arduino_sensors/arduino_sensors.ino"
 RANGE = 'Automated_Readings!A2:E'
 BAUD = 9600
-WRITE_INTERVAL = 120
+WRITE_INTERVAL = 600
 
 
 # Remember to alter batch_id when running the file on a new batch

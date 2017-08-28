@@ -58,7 +58,7 @@ void loop(void) {
     Serial.print(tempC, 2);
     Serial.print(", 'temp_f':");
     Serial.print(tempF, 2);
-    Serial.println("}");
+    Serial.print("}\n");
     printTime = millis();
   }
 }
