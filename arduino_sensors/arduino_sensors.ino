@@ -14,7 +14,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 // defining constants 
-#define printInterval 1000 * 10
+#define printInterval 1000 * 20
 #define phSensorPin A0 //pH meter Analog output to Arduino Analog Input 0
 #define calibrationOffset 0.26 //deviation compensate
 #define samplingInterval 20
@@ -58,7 +58,7 @@ void loop(void) {
     Serial.print(tempC, 2);
     Serial.print(", 'temp_f':");
     Serial.print(tempF, 2);
-    Serial.print("}\n");
+    Serial.print("}");
     printTime = millis();
   }
 }

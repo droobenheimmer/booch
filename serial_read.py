@@ -23,22 +23,37 @@ def read_arduino_serial(port, baud):
     Returns dict
     """
     
-    arduino = serial.Serial(port, baud, timeout = 1)  # open serial port
-    arduino.read()
-    row_string = arduino.readline()[0:-2].decode('utf-8').replace("'", "\"")
+    arduino = serial.Serial(port, baud, timeout = 15)  # open serial port
+    row_string = take_last_observation(arduino)
     
     if isinstance(row_string, str) and len(row_string) < 3:
         logger.warning("Arduino Serial passed string under 3 characters, waiting 20 sec for next line\n" +
                        "Row String: " + str(row_string))
         time.sleep(20)
-        row_string = arduino.readline()[0:-2].decode('utf-8').replace("'", "\"")
+        row_string = take_last_observation(arduino)
     elif row_string is None:
         logger.warning("Arduino Serial passed None, waiting 20 sec for next line\n" +
                        "Row String: " + str(row_string))
         time.sleep(20)
-        row_string = arduino.readline()[0:-2].decode('utf-8').replace("'", "\"")
+        row_string = take_last_observation(arduino)
     
     row_dict = json.loads(row_string)
     row_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     arduino.close()            
     return row_dict
+
+def take_last_observation(arduino_serial):
+    """
+    Takes an Serial object
+    Reads the last line, partitions on open bracket
+    Returns string
+    """
+    
+    row_string = arduino_serial.readline().decode('utf-8').replace("'", "\"")
+    
+    if '}' in row_string:
+        return "{" + row_string.rpartition("{")[-1]
+    else:
+        return ""
+
+        
