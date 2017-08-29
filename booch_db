@@ -4,7 +4,7 @@
 
 CREATE DATABASE booch
     WITH 
-    OWNER = postgres
+    OWNER = sudo
     ENCODING = 'UTF8'
     LC_COLLATE = 'English_United States.1252'
     LC_CTYPE = 'English_United States.1252'
@@ -19,7 +19,7 @@ CREATE SCHEMA IF NOT EXISTS dev;
 CREATE SEQUENCE IF NOT EXISTS batch_id_sequence;
 CREATE TABLE IF NOT EXISTS dev.batchs (
     id integer PRIMARY KEY DEFAULT nextval('batch_id_sequence'),
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp DEFAULT date_trunc('second', CURRENT_TIMESTAMP),
     ingredients jsonb,
     ferm_start timestamp
 );
@@ -28,8 +28,12 @@ CREATE SEQUENCE IF NOT EXISTS measurement_id_sequence;
 CREATE TABLE IF NOT EXISTS dev.measurements (
     id integer PRIMARY KEY DEFAULT nextval('measurement_id_sequence'),
     b_id integer REFERENCES dev.batchs (id),
-    created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+    created_at timestamp DEFAULT date_trunc('second', CURRENT_TIMESTAMP),
     time_elapsed numeric,
     pH numeric,
-    temp_f numeric
+    temp_f numeric,
+	temp_c numeric
 );
+
+
+ALTER DATABASE booch SET timezone = 'EST'

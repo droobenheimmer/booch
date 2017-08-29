@@ -8,8 +8,8 @@ Created on Thu Aug 17 15:22:56 2017
 from __future__ import print_function
 import httplib2
 import os
-from pprint import pprint
 
+from pprint import pprint
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -50,7 +50,7 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def write_row(spreadsheet_id, value_list, rangeName):
+def write_google_row(spreadsheet_id, value_list, rangeName):
 
     credentials = get_credentials()
     http = credentials.authorize(httplib2.Http())
@@ -66,10 +66,10 @@ def write_row(spreadsheet_id, value_list, rangeName):
     
     value_range_body = {
         'values': [value_list]
-        # TODO: Add desired entries to the request body.
     }
     
     request = service.spreadsheets().values().append(spreadsheetId=spreadsheet_id, range=rangeName, valueInputOption=value_input_option, insertDataOption=insert_data_option, body=value_range_body)
     response = request.execute()
     
     pprint(response)
+    
