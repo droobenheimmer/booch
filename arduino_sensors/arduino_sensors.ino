@@ -48,7 +48,7 @@ void loop(void) {
     
     sensors.requestTemperatures();
     tempC = sensors.getTempCByIndex(0);
-    tempF = (9.0/5) * tempC + 32;
+    tempF = ((9.0/5) * tempC) + 32;
     
     Serial.print("{'voltage':");
     Serial.print(voltage, 2);
