@@ -11,9 +11,7 @@ import subprocess
 import argparse
 import cgitb
 import logging
-
-from googleapiclient import errors
-from row_writer import write_google_row
+import traceback
 from serial_read import read_arduino_serial
 from db_write import upsert_batch_id, write_db_row
 
@@ -60,23 +58,15 @@ def main(batch_id):
             
             row_dict = read_arduino_serial(PORT_NAME, BAUD)
             row = [batch_id, row_dict['timestamp'], row_dict['voltage'], row_dict['pH'], row_dict['temp_f']]
-            write_google_row(SPREADSHEET_ID, row, RANGE)
             
             write_db_row(batch_id, row_dict)
             
             logger.info("Written Successfully: " + str(row))
             time.sleep(WRITE_INTERVAL)
-        
-        except errors.HttpError as error:
-
-            if error.resp.status in [403, 500, 502, 503]:
-                print(error.resp.status)
-                time.sleep(5)
-             
-            else: raise
     
         except Exception as e:
             logger.exception("Uncaught Exception")
+            traceback.print_exc()
             time.sleep(WRITE_INTERVAL)
             
 def upload_arduino_script(arduino_exe, port, project_file):
