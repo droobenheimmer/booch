@@ -35,7 +35,7 @@ SPREADSHEET_ID = os.environ.get("GOOGLE_SPREADSHEET_ID")
 PROJECT_FILE = "./arduino_sensors/arduino_sensors.ino"
 RANGE = 'Automated_Readings!A2:E'
 BAUD = 9600
-WRITE_INTERVAL = 600
+WRITE_INTERVAL = 15
 
 # Remember to alter batch_id when running the file on a new batch
 def main(batch_id):
