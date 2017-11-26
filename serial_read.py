@@ -9,6 +9,7 @@ import serial
 import datetime
 import json
 import time
+import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,6 +38,7 @@ def read_arduino_serial(port, baud):
         time.sleep(20)
         row_string = take_last_observation(arduino)
     
+    print("Loading Following String to Json:", row_string)
     row_dict = json.loads(row_string)
     row_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     arduino.close()            
@@ -49,11 +51,17 @@ def take_last_observation(arduino_serial):
     Returns string
     """
     
-    row_string = arduino_serial.readline().decode('utf-8').replace("'", "\"")
+    line = arduino_serial.readline()
+    print("Read serial line: ", line)
+    row_string = line.decode('utf-8').replace("'", "\"")
     
     if '}' in row_string:
         return "{" + row_string.rpartition("{")[-1]
     else:
         return ""
+
+if __name__ == "__main__":
+    print(os.environ.get("PORT_NAME"))
+    print(read_arduino_serial(os.environ.get("PORT_NAME"), 9600))
 
         

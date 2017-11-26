@@ -14,7 +14,7 @@ OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
 // defining constants 
-#define printInterval 1000 * 20
+#define printInterval 1000
 #define phSensorPin A0 //pH meter Analog output to Arduino Analog Input 0
 #define calibrationOffset 0.26 //deviation compensate
 #define samplingInterval 20
@@ -24,7 +24,7 @@ int arrayIndex = 0;
 
 void setup(void) {
   Serial.begin(9600);
-  Serial.println("Booch Sensors // Serial Monitor Version"); 
+//  Serial.println("Booch Sensors // Serial Monitor Version\n"); 
   sensors.begin();
 }
 
@@ -50,15 +50,15 @@ void loop(void) {
     tempC = sensors.getTempCByIndex(0);
     tempF = ((9.0/5) * tempC) + 32;
     
-    Serial.print("{'voltage':");
+    Serial.print("{\"voltage\":");
     Serial.print(voltage, 2);
-    Serial.print(", 'pH':");
+    Serial.print(", \"pH\":");
     Serial.print(pHValue, 2);
-    Serial.print(", 'temp_c':");
+    Serial.print(", \"temp_c\":");
     Serial.print(tempC, 2);
-    Serial.print(", 'temp_f':");
+    Serial.print(", \"temp_f\":");
     Serial.print(tempF, 2);
-    Serial.print("}");
+    Serial.print("}\n");
     printTime = millis();
   }
 }
