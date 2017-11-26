@@ -37,9 +37,13 @@ def read_arduino_serial(port, baud):
                        "Row String: " + str(row_string))
         time.sleep(20)
         row_string = take_last_observation(arduino)
-    
-    print("Loading Following String to Json:", row_string)
-    row_dict = json.loads(row_string)
+
+    try:
+        row_dict = json.loads(row_string)
+    except json.decoder.JSONDecodeError as e:
+        print("")
+        raise Exception("Handled JSON Decode Error  in loading: " + row_string)
+
     row_dict['timestamp'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     arduino.close()            
     return row_dict
@@ -47,18 +51,36 @@ def read_arduino_serial(port, baud):
 def take_last_observation(arduino_serial):
     """
     Takes an Serial object
-    Reads the last line, partitions on open bracket
-    Returns string
+    Reads until it encounters two line endings
+    Returns string of text in between
     """
     
-    line = arduino_serial.readline()
-    print("Read serial line: ", line)
-    row_string = line.decode('utf-8').replace("'", "\"")
+    line_ending_count = 0
+    line_string = []
+    while line_ending_count < 2:
+#         print(line_ending_count)
+         c = arduino_serial.read()
+         if (c == b"\n"):
+             if line_ending_count == 0:
+                 line_ending_count += 1
+                 line_string = []
+                 continue
+             elif line_ending_count == 1:
+                 line_ending_count += 1
+                 continue
+         else:
+             line_string.append(c)
+             
+    line_string = b"".join(line_string)
+    return line_string.decode('utf-8')
+     
+#    print("Read serial line: ", line_string)
+#     row_string = line_string.decode('utf-8').replace("'", "\"")
     
-    if '}' in row_string:
-        return "{" + row_string.rpartition("{")[-1]
-    else:
-        return ""
+#     if '}' in row_string:
+#         return "{" + row_string.rpartition("{")[-1]
+#     else:
+#         return ""
 
 if __name__ == "__main__":
     print(os.environ.get("PORT_NAME"))
